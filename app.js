@@ -8,6 +8,7 @@ const app = express();
 // app.use(bodyParser.urlencoded()); // x-www-form-urlencoded <form>
 app.use(bodyParser.json()); // application/json
 
+// Handle CORS policy
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*"); // "*": a wildcard that allows access from any client
   res.setHeader(
