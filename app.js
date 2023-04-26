@@ -64,6 +64,15 @@ mongoose
     "mongodb+srv://TrungNguyen-NodeComplete:WkzTfrNMAvDP5RNw@cluster0.wjkvrnd.mongodb.net/messages?retryWrites=true&w=majority"
   )
   .then((result) => {
-    app.listen(8080);
+    const server = app.listen(8080);
+    const io = require("socket.io")(server, {
+      cors: {
+        origin: "http://localhost:3000",
+        method: ["GET", "POST"],
+      },
+    });
+    io.on("connection", (socket) => {
+      console.log("Client connected!");
+    });
   })
   .catch((err) => console.log(err));
