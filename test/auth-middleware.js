@@ -2,7 +2,7 @@ const expect = require("chai").expect;
 const jwt = require("jsonwebtoken");
 const sinon = require("sinon");
 
-const authMiddleWare = require("../middleware/auth");
+const authMiddleware = require("../middleware/is-auth");
 
 describe("Auth middleware", function () {
   it("should throw an error if no authorization header is present", function () {
@@ -11,7 +11,7 @@ describe("Auth middleware", function () {
         return null;
       },
     };
-    expect(authMiddleWare.bind(this, req, {}, () => {})).to.throw(
+    expect(authMiddleware.bind(this, req, {}, () => {})).to.throw(
       "Not authenticated."
     );
   });
@@ -22,18 +22,18 @@ describe("Auth middleware", function () {
         return "xyz";
       },
     };
-    expect(authMiddleWare.bind(this, req, {}, () => {})).to.throw();
+    expect(authMiddleware.bind(this, req, {}, () => {})).to.throw();
   });
 
   it("should yield a userId after decoding the token", function () {
     const req = {
-      get: function () {
-        return "Bearer djdasdsadjlkj";
+      get: function (headerName) {
+        return "Bearer djfkalsdjfaslfjdlas";
       },
     };
     sinon.stub(jwt, "verify");
     jwt.verify.returns({ userId: "abc" });
-    authMiddleWare(req, {}, () => {});
+    authMiddleware(req, {}, () => {});
     expect(req).to.have.property("userId");
     expect(req).to.have.property("userId", "abc");
     expect(jwt.verify.called).to.be.true;
@@ -46,6 +46,6 @@ describe("Auth middleware", function () {
         return "Bearer xyz";
       },
     };
-    expect(authMiddleWare.bind(this, req, {}, () => {})).to.throw();
+    expect(authMiddleware.bind(this, req, {}, () => {})).to.throw();
   });
 });
